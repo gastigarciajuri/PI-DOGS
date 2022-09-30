@@ -97,21 +97,4 @@ router.get('/temperaments', async (req, res) =>{
   }
 })
 
-// numeros.forEach( (elemento) => {
-//   if (!unicos.includes(elemento)) {
-//     unicos.push(elemento);
-//   }
-
-
 module.exports = router;
-  // const tempEach = temperament.flat()
-  // //console.log(tempEach, "ICH")
-  // tempEach.forEach( async (e) => {
-  //   if(temperFinal.includes(e)){
-  //     return;
-  //   }else{
-  //     temperFinal.push(e)
-  //   }
-  // });
-  // const allTempers = await Temper.findAll();
-  // res.json(allTempers)
