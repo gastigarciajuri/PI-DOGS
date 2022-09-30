@@ -17,6 +17,7 @@ const getApiInfo = async () => {
   const apiUrl = await axios.get('https://api.thedogapi.com/v1/breeds')
   const apiInfo = await apiUrl.data.map( e => {
     return {
+      id: e.id,
       name: e.name,
       img: e.image.url,
       weight: e.weight,
@@ -48,6 +49,17 @@ const getAllDogs = async () =>{
 }
 
 //RUTAS!!
+router.get("/dogs/:id", async (req, res) =>{
+  const id = req.params.id
+  const dogsTotal = await getAllDogs()
+  if(id){
+    let dogsId = await dogsTotal.filter( e => e.id == id)
+    dogsId.length ?
+    res.status(200).json(dogsId) :
+    res.status(404).send(`No se encontro una raza asignada al id: ${id}`)
+  }
+})
+
 router.get('/dogs', async (req, res) =>{
   const name = req.query.name;
   let dogsTotal = await getAllDogs();
