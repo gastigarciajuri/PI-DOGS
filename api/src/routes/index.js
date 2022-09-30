@@ -81,7 +81,7 @@ router.get('/temperaments', async (req, res) =>{
     }
   });
   const allTemp = tempFinal.join(', ').split(', ').sort()
-  console.log(allTemp, "ALLTEMP")
+  //console.log(allTemp, "ALLTEMP")
   allTemp.forEach(async (e) => {
     await Temper.findOrCreate({
       where: { name: e },
@@ -89,12 +89,39 @@ router.get('/temperaments', async (req, res) =>{
     });
   });
   const allTempers = await Temper.findAll();
-  console.log("ALLTEMPERS",allTempers)
+  //console.log("ALLTEMPERS",allTempers)
   res.json(allTempers)
   } catch (error) {
     res.status(404).send(error)
     console.log(error)
   }
 })
+
+router.post('/dogs', async (req, res) =>{
+  let {
+    id,
+    name,
+    height,
+    weight,
+    life_span,
+    temperaments,
+    createdInDb,
+  } = req.body
+
+  let dogsCreated = await Dog.create({
+    id,
+    name,
+    height,
+    weight,
+    life_span,
+    createdInDb,
+  })
+
+  let temperDb = await Temper.findAll({ where: { name: temperaments }})
+  console.log(temperDb)
+  dogsCreated.addTemper(temperDb)
+  res.send("PERRO CREADO CON EXITO")
+})
+
 
 module.exports = router;
