@@ -17,6 +17,7 @@ const getApiInfo = async () => {
   const apiUrl = await axios.get('https://api.thedogapi.com/v1/breeds')
   const apiInfo = await apiUrl.data.map( e => {
     return {
+      id: e.id,
       name: e.name,
       img: e.image.url,
       weight: e.weight,
@@ -48,6 +49,17 @@ const getAllDogs = async () =>{
 }
 
 //RUTAS!!
+router.get("/dogs/:id", async (req, res) =>{
+  const id = req.params.id
+  const dogsTotal = await getAllDogs()
+  if(id){
+    let dogsId = await dogsTotal.filter( e => e.id == id)
+    dogsId.length ?
+    res.status(200).json(dogsId) :
+    res.status(404).send(`No se encontro una raza asignada al id: ${id}`)
+  }
+})
+
 router.get('/dogs', async (req, res) =>{
   const name = req.query.name;
   let dogsTotal = await getAllDogs();
@@ -81,7 +93,7 @@ router.get('/temperaments', async (req, res) =>{
     }
   });
   const allTemp = tempFinal.join(', ').split(', ').sort()
-  console.log(allTemp, "ALLTEMP")
+  //console.log(allTemp, "ALLTEMP")
   allTemp.forEach(async (e) => {
     await Temper.findOrCreate({
       where: { name: e },
@@ -89,7 +101,7 @@ router.get('/temperaments', async (req, res) =>{
     });
   });
   const allTempers = await Temper.findAll();
-  console.log("ALLTEMPERS",allTempers)
+  //console.log("ALLTEMPERS",allTempers)
   res.json(allTempers)
   } catch (error) {
     res.status(404).send(error)
@@ -97,21 +109,31 @@ router.get('/temperaments', async (req, res) =>{
   }
 })
 
-// numeros.forEach( (elemento) => {
-//   if (!unicos.includes(elemento)) {
-//     unicos.push(elemento);
-//   }
+router.post('/dogs', async (req, res) =>{
+  let {
+    id,
+    name,
+    height,
+    weight,
+    life_span,
+    temperaments,
+    createdInDb,
+  } = req.body
+
+  let dogsCreated = await Dog.create({
+    id,
+    name,
+    height,
+    weight,
+    life_span,
+    createdInDb,
+  })
+
+  let temperDb = await Temper.findAll({ where: { name: temperaments }})
+  console.log(temperDb)
+  dogsCreated.addTemper(temperDb)
+  res.send("PERRO CREADO CON EXITO")
+})
 
 
 module.exports = router;
-  // const tempEach = temperament.flat()
-  // //console.log(tempEach, "ICH")
-  // tempEach.forEach( async (e) => {
-  //   if(temperFinal.includes(e)){
-  //     return;
-  //   }else{
-  //     temperFinal.push(e)
-  //   }
-  // });
-  // const allTempers = await Temper.findAll();
-  // res.json(allTempers)

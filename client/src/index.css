@@ -1,4 +1,6 @@
 body {
+  background: url(https://cdn.pixabay.com/photo/2018/03/19/11/06/french-bulldog-3239718_960_720.jpg);
+  background-size:cover;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
